@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Korean Food Recipe Chatbot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <h1>Korean Food Recipe Chatbot</h1>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="foodImage">Upload a food photo:</label><br />
+        <input type="file" name="foodImage" id="foodImage" accept="image/*" required /><br /><br />
+        <button type="submit">Upload and Get Recipe</button>
+    </form>
+</body>
+</html>

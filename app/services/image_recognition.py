@@ -1,0 +1,35 @@
+# app/services/image_recognition.py
+from openai import OpenAI
+import config
+import base64
+
+client = OpenAI(
+    base_url="https://api.studio.nebius.ai/v1/",
+    api_key=config.NEBIUS_API_KEY,
+)
+
+def predict_food_name(image_path: str) -> str:
+    image_data = encode_image(image_path)
+    # 이미지 분석 API 호출 코드 구현
+    # image_path 에서 이미지 읽고, API 호출 후 음식명 반환
+    
+    response = client.chat.completions.create(
+        model="google/gemma-3-27b-it",
+        messages=[
+            {"role": "system", "content": "You are an image recognition assistant."},
+            {
+                "role": "user",
+                "content": f"Analyze this image and tell me the food name: {image_data}"
+            },
+        ],
+    )
+
+    food_name = response.choices[0].message.content.strip()
+    return food_name
+
+
+def encode_image(image_path: str) -> str:
+    with open(image_path, "rb") as image_file:
+        return base64.b64encode(image_file.read()).decode("utf-8")
+
+

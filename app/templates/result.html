@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <title>Recipe Result</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+</head>
+<body>
+    <h1>Recommended Recipe</h1>
+
+    {% if recipe %}
+        <h2>{{ recipe.name }}</h2>
+        <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
+        <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+    {% else %}
+        <p>Sorry, we couldn't find a matching recipe. Please try another photo.</p>
+    {% endif %}
+
+    <a href="/">Upload another photo</a>
+</body>
+</html>
