@@ -6,9 +6,16 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-    <h1>Remy's Korean Food Recipe Chatbot</h1>
-    <p>Hello, I'm Remy. Please upload a picture of Korean food to get a recipe!</p>
-    <form action="/api/chatbot/image_upload" method="post" enctype="multipart/form-data">
+<div class="kitchen">
+    <img src="/static/image_source/kitchen.png" alt="Kitchen" class="kitchen-image" />
+    <div class="remy">
+        <img src="/static/image_source/Remy.png" alt="Remy" class="remy-image" />
+        <div class="speech-bubble">
+            <p>Hello, I'm Remy. How can I assist you today?</p>
+        </div>
+    </div>
+</div>
+    <form action="/api/image_upload" method="post" enctype="multipart/form-data">
         <label for="foodImage">Upload a food photo:</label><br />
         <input type="file" name="foodImage" id="foodImage" accept="image/*" required /><br /><br />
         <button type="submit">Upload and Check Recipe</button>
