@@ -5,6 +5,6 @@ requests==2.31.0
 pandas==2.0.3
 python-dotenv==1.0.0
 Pillow==10.0.0
-torch==2.0.1
+# torch==2.0.1  
+# 추후에 직접 설치: pip install torch --index-url https://download.pytorch.org/whl/cpu
 transformers==4.31.0
-base64

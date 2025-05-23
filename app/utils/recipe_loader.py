@@ -1,29 +1,14 @@
-# app/utils/recipe_loader.py
-
-import csv
 import os
+import pandas as pd
 
 def load_recipes(csv_path=None):
     if csv_path is None:
-        csv_path = os.path.join("data", "recipe_data.csv")
+        csv_path = os.path.join("data", "recipe_data_sample.csv")
 
-    recipes = {}
-    with open(csv_path, encoding="utf-8") as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            name = row.get("CKG_NM", "").strip()
-            if name:
-                recipes[name] = {
-                    "title": row.get("RCP_TTL", ""),
-                    "ingredients": row.get("CKG_MTRL_CN", ""),
-                    "portions": row.get("CKG_INBUN_NM", ""),
-                    "difficulty": row.get("CKG_DODF_NM", ""),
-                    "time": row.get("CKG_TIME_NM", ""),
-                    "cook_type": row.get("CKG_MTH_ACTO_NM", "")
+    df = pd.read_csv(csv_path, encoding="utf-8")
+    df = df.dropna(subset=["CKG_NM"])  # 음식명 없는 행 제거
+    df["CKG_NM"] = df["CKG_NM"].str.strip()  # 공백 제거
+    return df
 
-
-
-    return recipes
-
-def find_recipe_by_food_name(food_name, recipes):
-    return recipes.get(food_name)
+def find_recipes_by_food_name(food_name, df):
+    return df[df["CKG_NM"].str.contains(food_name, case=False, na=False)]

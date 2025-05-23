@@ -9,7 +9,7 @@ chatbot_bp = Blueprint('chatbot', __name__)
 def index():
     return render_template('index.html')
 
-@chatbot_bp.route('/upload', methods=['POST'])
+@chatbot_bp.route('/upload', methods=['POST'], strict_slashes=False)
 def upload():
 
     if 'foodImage' not in request.files:

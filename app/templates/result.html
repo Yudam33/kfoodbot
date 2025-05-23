@@ -9,9 +9,17 @@
     <h1>Recommended Recipe</h1>
 
     {% if recipe %}
-        <h2>{{ recipe.name }}</h2>
-        <p><strong>Ingredients:</strong> {{ recipe.ingredients }}</p>
-        <p><strong>Instructions:</strong> {{ recipe.instructions }}</p>
+        <h2>{{ recipe["title"] }}</h2>
+
+        <ul>
+            <li><strong>Portions:</strong> {{ recipe["portions"] }}</li>
+            <li><strong>Difficulty:</strong> {{ recipe["difficulty"] }}</li>
+            <li><strong>Time Required:</strong> {{ recipe["time"] }}</li>
+            <li><strong>Cooking Type:</strong> {{ recipe["cook_type"] }}</li>
+        </ul>
+
+        <h3>Ingredients</h3>
+        <p>{{ recipe["ingredients"] }}</p>
     {% else %}
         <p>Sorry, we couldn't find a matching recipe. Please try another photo.</p>
     {% endif %}
