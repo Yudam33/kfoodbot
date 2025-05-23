@@ -1,15 +1,15 @@
-from app.services.image_recognition import predict_food_name
+# app/services/chatbot_service.py
 from app.utils.recipe_loader import load_recipes
 
-# 미리 레시피 데이터를 한 번만 로드해두는 게 효율적입니다.
-recipes = load_recipes()
-
 def get_recipe_by_image(image_path):
-    # 1. 이미지에서 음식 이름 예측
-    food_name = predict_food_name(image_path)
-    if not food_name:
-        return None
+    # Placeholder function for getting a recipe by image
+    return {"name": "Placeholder Recipe", "description": "This is a placeholder recipe.", "ingredients": [], "steps": []}
 
-    # 2. 예측한 음식 이름으로 레시피 찾기
-    recipe = recipes.get(food_name)
-    return recipe
+def handle_chat_message(message):
+    # Placeholder implementation for handling chatbot messages
+    if message.lower() == "hi":
+        return "Hello! How can I assist you with Korean food recipes?"
+    elif message.lower() == "bye":
+        return "Goodbye! Have a great day!"
+    else:
+        return "I'm sorry, I didn't understand that. Try saying 'hi' or 'bye'."

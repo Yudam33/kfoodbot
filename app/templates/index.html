@@ -2,16 +2,41 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <title>Korean Food Recipe Chatbot</title>
+    <title>Remy's Korean Food Recipe Chatbot</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
 </head>
 <body>
-    <h1>Korean Food Recipe Chatbot</h1>
-
-<form action="{{ url_for('chatbot.upload') }}" method="post" enctype="multipart/form-data">
+    <h1>Remy's Korean Food Recipe Chatbot</h1>
+    <p>Hello, I'm Remy. Please upload a picture of Korean food to get a recipe!</p>
+    <form action="/api/chatbot/image_upload" method="post" enctype="multipart/form-data">
         <label for="foodImage">Upload a food photo:</label><br />
         <input type="file" name="foodImage" id="foodImage" accept="image/*" required /><br /><br />
-        <button type="submit">Upload and Get Recipe</button>
+        <button type="submit">Upload and Check Recipe</button>
     </form>
+    <div id="chatbot">
+        <p>Remy: Hi there! How can I assist you today?</p>
+        <textarea id="userInput" placeholder="Type your message here..."></textarea>
+        <button onclick="sendMessage()">Send</button>
+    </div>
+<script>
+async function sendMessage() {
+    const userInput = document.getElementById('userInput');
+    const chatbotDiv = document.getElementById('chatbot');
+    chatbotDiv.innerHTML += `<p>User: ${userInput.value}</p>`;
+    
+    const response = await fetch('/api/chatbot/chat', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `message=${encodeURIComponent(userInput.value)}`
+    });
+    const data = await response.json();
+    chatbotDiv.innerHTML += `<p>Remy: ${data.response}</p>`;
+    
+    userInput.value = '';
+}
+</script>
+<!-- Force reload -->
 </body>
 </html>

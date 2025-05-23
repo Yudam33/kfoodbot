@@ -22,7 +22,7 @@ def save_image(file):
         return file_path
     return None
 
-@image_upload_bp.route("/upload", methods=["POST"])
+@image_upload_bp.route("/image_upload", methods=["POST"])
 def upload_image():
     file = request.files.get("image")
     if not file:
