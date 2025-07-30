@@ -8,3 +8,14 @@ Pillow==10.0.0
 # torch==2.0.1  
 # 추후에 직접 설치: pip install torch --index-url https://download.pytorch.org/whl/cpu
 transformers==4.31.0
+# Korean text processing
+konlpy==0.6.0
+# For better Korean text handling
+chardet==5.2.0
+# For fuzzy string matching
+fuzzywuzzy==0.18.0
+python-Levenshtein==0.21.1
+# For enhanced data processing
+numpy==1.24.3
+# For JSON handling
+ujson==5.8.0

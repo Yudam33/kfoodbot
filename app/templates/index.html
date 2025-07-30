@@ -1,49 +1,214 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8" />
-    <title>Remy's Korean Food Recipe Chatbot</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>한국 음식 레시피 챗봇</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-<div class="kitchen">
-    <img src="/static/image_source/kitchen.png" alt="Kitchen" class="kitchen-image" />
-    <div class="remy">
-        <img src="/static/image_source/Remy.png" alt="Remy" class="remy-image" />
-        <div class="speech-bubble">
-            <p>Hello, I'm Remy. How can I assist you today?</p>
-        </div>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-utensils"></i>
+                    <h1>한국 음식 레시피 도우미</h1>
+                </div>
+                <p class="subtitle">전통부터 현대까지, 맛있는 한국 요리를 찾아보세요</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Chat Interface -->
+            <div class="chat-container">
+                <div class="chat-header">
+                    <div class="chatbot-avatar">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="chatbot-info">
+                        <h3>한국 음식 도우미</h3>
+                        <span class="status">온라인</span>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="message bot-message">
+                        <div class="message-content">
+                            <p>안녕하세요! 🍽️ 한국 음식 레시피 도우미입니다.</p>
+                            <p>어떤 음식에 대해 궁금하신가요?</p>
+                            <div class="quick-actions">
+                                <button class="quick-btn" onclick="sendQuickMessage('김치찌개 레시피 알려줘')">김치찌개</button>
+                                <button class="quick-btn" onclick="sendQuickMessage('불고기 만드는법')">불고기</button>
+                                <button class="quick-btn" onclick="sendQuickMessage('인기 한국 음식')">인기 음식</button>
+                                <button class="quick-btn" onclick="sendQuickMessage('도움말')">도움말</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chat-input-container">
+                    <div class="input-wrapper">
+                        <input type="text" id="userInput" placeholder="음식 이름이나 질문을 입력하세요..." />
+                        <button id="sendBtn" onclick="sendMessage()">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Image Upload Section -->
+            <div class="upload-section">
+                <div class="upload-card">
+                    <div class="upload-header">
+                        <i class="fas fa-camera"></i>
+                        <h3>사진으로 레시피 찾기</h3>
+                    </div>
+                    <form action="/api/image_upload" method="post" enctype="multipart/form-data" id="uploadForm">
+                        <div class="file-upload-area" id="fileUploadArea">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <p>음식 사진을 업로드하세요</p>
+                            <input type="file" name="foodImage" id="foodImage" accept="image/*" />
+                        </div>
+                        <button type="submit" class="upload-btn">
+                            <i class="fas fa-search"></i>
+                            레시피 찾기
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 한국 음식 레시피 도우미. 전통의 맛을 현대적으로.</p>
+        </footer>
     </div>
-</div>
-    <form action="/api/image_upload" method="post" enctype="multipart/form-data">
-        <label for="foodImage">Upload a food photo:</label><br />
-        <input type="file" name="foodImage" id="foodImage" accept="image/*" required /><br /><br />
-        <button type="submit">Upload and Check Recipe</button>
-    </form>
-    <div id="chatbot">
-        <p>Remy: Hi there! How can I assist you today?</p>
-        <textarea id="userInput" placeholder="Type your message here..."></textarea>
-        <button onclick="sendMessage()">Send</button>
-    </div>
-<script>
-async function sendMessage() {
-    const userInput = document.getElementById('userInput');
-    const chatbotDiv = document.getElementById('chatbot');
-    chatbotDiv.innerHTML += `<p>User: ${userInput.value}</p>`;
-    
-    const response = await fetch('/api/chatbot/chat', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: `message=${encodeURIComponent(userInput.value)}`
-    });
-    const data = await response.json();
-    chatbotDiv.innerHTML += `<p>Remy: ${data.response}</p>`;
-    
-    userInput.value = '';
-}
-</script>
-<!-- Force reload -->
+
+    <script>
+        const chatMessages = document.getElementById('chatMessages');
+        const userInput = document.getElementById('userInput');
+        const sendBtn = document.getElementById('sendBtn');
+        const fileUploadArea = document.getElementById('fileUploadArea');
+        const foodImage = document.getElementById('foodImage');
+
+        // Enter key to send message
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+
+        // File upload preview
+        foodImage.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    fileUploadArea.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview" style="max-width: 200px; max-height: 200px; border-radius: 8px;">
+                        <p>${file.name}</p>
+                    `;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Drag and drop for file upload
+        fileUploadArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.add('dragover');
+        });
+
+        fileUploadArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+        });
+
+        fileUploadArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            fileUploadArea.classList.remove('dragover');
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                foodImage.files = files;
+                foodImage.dispatchEvent(new Event('change'));
+            }
+        });
+
+        function addMessage(content, isBot = false) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isBot ? 'bot-message' : 'user-message'}`;
+            
+            const messageContent = document.createElement('div');
+            messageContent.className = 'message-content';
+            
+            if (typeof content === 'string') {
+                messageContent.innerHTML = `<p>${content}</p>`;
+            } else {
+                messageContent.innerHTML = content;
+            }
+            
+            messageDiv.appendChild(messageContent);
+            chatMessages.appendChild(messageDiv);
+            
+            // Scroll to bottom
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function sendQuickMessage(message) {
+            addMessage(message, false);
+            sendMessageToServer(message);
+        }
+
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+
+            // Add user message
+            addMessage(message, false);
+            userInput.value = '';
+
+            // Send to server
+            await sendMessageToServer(message);
+        }
+
+        async function sendMessageToServer(message) {
+            try {
+                sendBtn.disabled = true;
+                sendBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `message=${encodeURIComponent(message)}`
+                });
+
+                const data = await response.json();
+                
+                if (data.error) {
+                    addMessage('죄송합니다. 오류가 발생했습니다.', true);
+                } else {
+                    addMessage(data.response, true);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                addMessage('죄송합니다. 서버와의 연결에 문제가 있습니다.', true);
+            } finally {
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = '<i class="fas fa-paper-plane"></i>';
+            }
+        }
+
+        // Auto-focus on input
+        window.addEventListener('load', function() {
+            userInput.focus();
+        });
+    </script>
 </body>
 </html>

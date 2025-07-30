@@ -1,0 +1,24 @@
+# Korean Food Chatbot Environment Variables
+# 한국 음식 챗봇 환경 변수
+
+# Flask Configuration
+FLASK_ENV=development
+FLASK_DEBUG=True
+SECRET_KEY=your-secret-key-here
+
+# Application Settings
+PORT=5000
+RECIPE_DATA_PATH=data/recipe_data_sample.csv
+
+# CORS Settings (comma-separated)
+CORS_ORIGINS=http://localhost:3000,http://localhost:5000
+
+# File Upload Settings
+MAX_CONTENT_LENGTH=16777216  # 16MB in bytes
+
+# Chatbot Settings
+MAX_CONVERSATION_HISTORY=50
+DEFAULT_RESPONSE_TIMEOUT=30
+
+# Development Settings
+DEBUG=True 
